@@ -8,4 +8,4 @@ version          '0.2.5'
 
 
 depends "xml"
-depends "active_support"
+depends "activesupport"
