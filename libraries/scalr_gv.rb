@@ -25,7 +25,7 @@ module Scalr
     global_variables = Hash.new
     gv_doc.elements.each('response/variables/variable') do |element|
 	  # Add .strip to remove tabs, newlines and other junk.
-      global_variables[element.attributes["name"]] = element.text.strip
+      global_variables[element.attributes["name"]] = element.text.to_s.strip
     end
 
     global_variables
