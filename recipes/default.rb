@@ -7,5 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-chef_gem 'nokogiri'
+node.set['xml']['compiletime'] = true
+include_recipe 'xml::default'
 chef_gem 'activesupport'
