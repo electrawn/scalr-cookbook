@@ -8,4 +8,4 @@
 #
 
 chef_gem 'nokogiri'
-chef_gem 'active_support'
+chef_gem 'activesupport'
