@@ -2,7 +2,8 @@ require 'nokogiri'
 require 'active_support/core_ext/hash/conversions'
 require 'chef/mixin/shell_out'
 include Chef::Mixin::ShellOut
-
+chef_gem 'nokogiri'
+chef_gem 'active_support'
 
 module Scalr
   def self.roles()

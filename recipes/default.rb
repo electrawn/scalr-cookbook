@@ -6,3 +6,6 @@
 # 
 # All rights reserved - Do Not Redistribute
 #
+
+chef_gem 'nokogiri'
+chef_gem 'active_support'
