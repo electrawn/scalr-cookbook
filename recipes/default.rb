@@ -9,4 +9,7 @@
 
 node.set['xml']['compiletime'] = true
 include_recipe 'xml::default'
-chef_gem 'activesupport'
+
+chef_gem "activesupport" do
+   version "4.1.4"
+end
