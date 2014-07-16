@@ -7,10 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
-#node.set['xml']['compiletime'] = true
-#include_recipe 'xml::default'
-#node.set['build-essential']['compile_time'] = true
-#include_recipe 'build-essential::default'
+node.set['xml']['compiletime'] = true
+include_recipe 'xml::ruby'
 
 chef_gem "nori"
 
