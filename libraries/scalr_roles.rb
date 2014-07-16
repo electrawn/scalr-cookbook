@@ -42,6 +42,7 @@ module Scalr
     list_farm_role_params = Nori.new(:parser => :rexml).parse(gv_response)
     
     list_farm_role_params
+	end
 end
 
 
