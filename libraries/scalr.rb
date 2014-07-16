@@ -36,7 +36,7 @@ class Scalr
     list_global_variables
   end
   
-  def self.list_roles()
+  def list_roles()
     require 'nori'
     require "rexml/document"
 	
@@ -59,7 +59,7 @@ class Scalr
   
   
   
-  def self.list_farm_role_params(farm_role_id)
+  def list_farm_role_params(farm_role_id)
     require 'nori'
     require "rexml/document"
 	
