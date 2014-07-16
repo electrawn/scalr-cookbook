@@ -4,6 +4,9 @@ include Chef::Mixin::ShellOut
 
 
 class Scalr
+  
+  attr_reader :global_variables, :roles
+  
   def initialize()
     @global_variables = list_global_variables   
     @roles = list_roles
