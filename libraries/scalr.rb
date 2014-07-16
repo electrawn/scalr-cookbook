@@ -82,8 +82,8 @@ end
 
 
 # Hook in
-unless(Chef::Recipe.ancestors.include?(Scalr))
-  Chef::Recipe.send(:include, Scalr)
-  Chef::Resource.send(:include, Scalr)
-  Chef::Provider.send(:include, Scalr)
-end
+#unless(Chef::Recipe.ancestors.include?(Scalr))
+#  Chef::Recipe.send(:include, Scalr)
+#  Chef::Resource.send(:include, Scalr)
+#  Chef::Provider.send(:include, Scalr)
+#end
