@@ -7,8 +7,8 @@
 # All rights reserved - Do Not Redistribute
 #
 
-node.set['xml']['compiletime'] = true
-include_recipe 'xml::ruby'
+#node.set['xml']['compiletime'] = true
+#include_recipe 'xml::ruby'
 
 chef_gem "nori"
 
