@@ -14,7 +14,7 @@ module Scalr
     # We use szradm and not environment variables so that we can run
     # in a standalone chef-client run
     p = Chef::Mixin::ShellOut.shell_out '/usr/local/bin/szradm',  '-q', 'list-global-variables'
-    gv_response = p.stdout.to_s.strip
+    gv_response = p.stdout.lines.map{|line| line = line.strip}.join
     #gv_doc = Nokogiri::XML(gv_response)
 
     # Parse and return Roles	
