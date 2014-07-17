@@ -6,6 +6,8 @@ include Chef::Mixin::ShellOut
 class Scalr
   include Singleton
   attr_reader :global_variables, :roles
+  @global_variables = Hash.new
+  @roles = Hash.new
   
   def initialize()
     @global_variables = list_global_variables   
@@ -89,7 +91,7 @@ class Scalr
   
   def get_mysql_master()
     puts "Roles is: #{@roles}"
-    self.roles[:roles].each do |role|
+    roles[:roles].each do |role|
       puts "Role is: #{role}"
       if !role[:@behavior].split(',').find_all{|behavior| behavior == 'mysql2'}.empty?
         puts "Role Passed is: #{role}"
