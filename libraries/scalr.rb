@@ -1,5 +1,6 @@
 require "rexml/document"
 require 'chef/mixin/shell_out'
+requir
 include Chef::Mixin::ShellOut
 
 
@@ -39,8 +40,8 @@ class Scalr
     # Parse and return Global Variables
     list_global_variables = Hash.new
     gv_doc.elements.each('response/variables/variable') do |element|
-	  # Add .strip to remove tabs, newlines and other junk.
-    list_global_variables[element.attributes["name"]] = element.text.to_s.strip
+      # Add .strip to remove tabs, newlines and other junk.
+      list_global_variables[element.attributes["name"]] = element.text.to_s.strip
     end
 
     list_global_variables
@@ -89,22 +90,33 @@ class Scalr
     list_farm_role_params
 	end
   
-  def get_mysql_master()
-    puts "Roles is: #{@roles}"
-    roles[:roles].each do |role|
-      puts "Role is: #{role}"
-      if !role[:@behavior].split(',').find_all{|behavior| behavior == 'mysql2'}.empty?
-        puts "Role Passed is: #{role}"
-        role[:hosts].each do |host|
-          puts "Host is: #{host}"
-          if host[:@replication_master] == 1
-            puts "Returning: #{host}"
+  def get_mysql_master()  
+    #Collapse Roles Array hash keys
+    if roles['roles']['role'].kind_of?(Array)
+      roles['roles'] = roles['roles']['role']
+    else
+      roles['roles'] = [].push(roles['roles']['role'])
+    end
+   
+    roles["roles"].each do |role|    
+      #Find Behaviour attribute containing mysql2
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
+        #Collapse Host Array hash keys
+        if role['hosts']['host'].kind_of?(Array)
+          role['hosts'] = role['hosts']['host']
+        else
+          role['hosts'] = [].push(role['hosts']['host'])
+        end
+        #Search each host for master.
+        role['hosts'].each do |host|  
+          if host['@replication_master'] == "1"
             return host
           end
         end
       end
     end
   end
+
   
   
 end
