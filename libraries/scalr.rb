@@ -90,11 +90,11 @@ class Scalr
   def get_mysql_master()
     roles[:roles].each do |role|
       puts "Role is: #{role}"
-      if !role[:behavior].split(',').find_all{|behavior| behavior == 'mysql2'}.empty?
+      if !role[:@behavior].split(',').find_all{|behavior| behavior == 'mysql2'}.empty?
         puts "Role Passed is: #{role}"
         role[:hosts].each do |host|
           puts "Host is: #{host}"
-          if host[:replication_master] == 1
+          if host[:@replication_master] == 1
             puts "Returning: #{host}"
             return host
           end
