@@ -1,6 +1,5 @@
 require "rexml/document"
 require 'chef/mixin/shell_out'
-requir
 include Chef::Mixin::ShellOut
 
 
