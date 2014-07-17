@@ -91,13 +91,14 @@ class Scalr
   
   def get_mysql_master()  
     #Collapse Roles Array hash keys
-    if roles['roles']['role'].kind_of?(Array)
-      roles['roles'] = roles['roles']['role']
+    var_roles = roles.clone
+    if var_roles['roles']['role'].kind_of?(Array)
+      var_roles['roles'] = var_roles['roles']['role']
     else
-      roles['roles'] = [].push(roles['roles']['role'])
+      var_roles['roles'] = [].push(var_roles['roles']['role'])
     end
    
-    roles["roles"].each do |role|    
+    var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing mysql2
       if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
         #Collapse Host Array hash keys
