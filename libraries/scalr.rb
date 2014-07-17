@@ -12,6 +12,11 @@ class Scalr
     @roles = list_roles
   end
   
+  def refresh()
+    @global_variables = list_global_variables   
+    @roles = list_roles
+  end
+  
   def list_global_variables(node=nil)
 
     # Optionally submit the node, in which case we'll look for an override
@@ -81,6 +86,24 @@ class Scalr
     
     list_farm_role_params
 	end
+  
+  def get_mysql_master()
+    roles[:roles].each do |role|
+      puts "Role is: #{role}"
+      if !role[:behavior].split(',').find_all{|behavior| behavior == 'mysql2'}.empty?
+        puts "Role Passed is: #{role}"
+        role[:hosts].each do |host|
+          puts "Host is: #{host}"
+          if host[:replication_master] == 1
+            puts "Returning: #{host}"
+            return host
+          end
+        end
+      end
+    end
+  end
+  
+  
 end
 
 
