@@ -11,6 +11,7 @@
 #include_recipe 'xml::ruby'
 
 chef_gem "nori"
+chef_gem "inifile"
 
 #chef_gem "activesupport" do
 #   version "4.1.4"
