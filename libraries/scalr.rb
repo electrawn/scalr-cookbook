@@ -128,8 +128,32 @@ class Scalr
     end
   end
 
-  
-  
+  def get_www_loadbalancer()
+    #Collapse Roles Array hash keys
+    var_roles = roles.clone
+    if var_roles['roles']['role'].kind_of?(Array)
+      var_roles['roles'] = var_roles['roles']['role']
+    else
+      var_roles['roles'] = [].push(var_roles['roles']['role'])
+    end
+   
+    var_roles["roles"].each do |role|    
+      #Find Behaviour attribute containing www
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "www"}.empty?      
+        #Collapse Host Array hash keys
+        if role['hosts']['host'].kind_of?(Array)
+          role['hosts'] = role['hosts']['host']
+        else
+          role['hosts'] = [].push(role['hosts']['host'])
+        end
+        role['hosts'].each do |host|  
+         #Return first host
+            return host       
+        end
+      end
+    end
+  end
+   
 end
 
 
