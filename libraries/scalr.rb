@@ -6,17 +6,25 @@ include Chef::Mixin::ShellOut
 class Scalr
   include Singleton
   attr_reader :global_variables, :roles
+  @identity = Hash.new
   @global_variables = Hash.new
   @roles = Hash.new
   
   def initialize()
+    @identity = get_identity
     @global_variables = list_global_variables   
     @roles = list_roles
   end
   
   def refresh()
+    @identity = get_identity
     @global_variables = list_global_variables   
     @roles = list_roles
+  end
+  
+  def get_identity
+    config = IniFile.new( :filename=> '/etc/scalr/private.d/config.ini')    
+    @identity = config.to_h
   end
   
   def list_global_variables(node=nil)
@@ -66,7 +74,9 @@ class Scalr
     list_roles
   end
   
-  
+  def identity.first?
+    return @identity["general"]["server_index"] == "1"
+  end
   
   
   def list_farm_role_params(farm_role_id)
