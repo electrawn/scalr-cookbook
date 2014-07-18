@@ -102,7 +102,7 @@ class Scalr
   
   def get_mysql_master()  
     #Collapse Roles Array hash keys
-    var_roles = roles.clone
+    var_roles = roles.dup
     if var_roles['roles']['role'].kind_of?(Array)
       var_roles['roles'] = var_roles['roles']['role']
     else
@@ -114,12 +114,12 @@ class Scalr
       if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
         #Collapse Host Array hash keys
         if role['hosts']['host'].kind_of?(Array)
-          role['hosts'] = role['hosts']['host']
+          hosts = role['hosts']['host']
         else
-          role['hosts'] = [].push(role['hosts']['host'])
+          hosts = [].push(role['hosts']['host'])
         end
         #Search each host for master.
-        role['hosts'].each do |host|  
+        hosts.each do |host|  
           if host['@replication_master'] == "1"
             return host
           end
@@ -130,7 +130,7 @@ class Scalr
 
   def get_www_loadbalancer()
     #Collapse Roles Array hash keys
-    var_roles = roles.clone
+    var_roles = roles.dup
     if var_roles['roles']['role'].kind_of?(Array)
       var_roles['roles'] = var_roles['roles']['role']
     else
@@ -142,11 +142,11 @@ class Scalr
       if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "www"}.empty?      
         #Collapse Host Array hash keys
         if role['hosts']['host'].kind_of?(Array)
-          role['hosts'] = role['hosts']['host']
+          hosts = role['hosts']['host']
         else
-          role['hosts'] = [].push(role['hosts']['host'])
+          hosts = [].push(role['hosts']['host'])
         end
-        role['hosts'].each do |host|  
+        hosts.each do |host|  
          #Return first host
             return host       
         end
