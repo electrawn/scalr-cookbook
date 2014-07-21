@@ -100,6 +100,31 @@ class Scalr
     list_farm_role_params
 	end
   
+  def get_farm_role_id(role_name)
+    #Collapse Roles Array hash keys
+    var_roles = roles.dup
+    if var_roles['roles']['role'].kind_of?(Array)
+      var_roles['roles'] = var_roles['roles']['role']
+    else
+      var_roles['roles'] = [].push(var_roles['roles']['role'])
+    end
+   
+    var_roles["roles"].each do |role|    
+      #Find Behaviour attribute containing role_name
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?             
+        return role['@id']          
+      end
+    end
+    #default return
+    return nil
+  end
+  
+  def get_mysql_root_password()    
+    farm_role_id = get_farm_role_id("mysql2")
+    farm_role_params = list_farm_role_params(farm_role_id)
+    return farm_role_params["mysql2"]["root_password"]
+  end
+  
   def get_mysql_master()  
     #Collapse Roles Array hash keys
     var_roles = roles.dup
@@ -147,8 +172,8 @@ class Scalr
           hosts = [].push(role['hosts']['host'])
         end
         hosts.each do |host|  
-         #Return first host
-            return host       
+          #Return first host
+          return host       
         end
       end
     end
