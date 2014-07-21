@@ -141,7 +141,7 @@ class Scalr
         if role['hosts']['host'].nil? && !identity["general"]["behavior"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
           return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1"}
-        if role['hosts']['host'].kind_of?(Array)
+        elsif role['hosts']['host'].kind_of?(Array)
           hosts = role['hosts']['host']
         else
           hosts = [].push(role['hosts']['host'])
