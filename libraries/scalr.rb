@@ -138,6 +138,9 @@ class Scalr
       #Find Behaviour attribute containing mysql2
       if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
         #Collapse Host Array hash keys
+        if role['hosts']['host'].nil? && !identity["general"]["behavior"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
+          #Assume I am a uninitialized master!
+          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1"}
         if role['hosts']['host'].kind_of?(Array)
           hosts = role['hosts']['host']
         else
