@@ -155,6 +155,40 @@ class Scalr
       end
     end
   end
+  
+  def get_mysql_slave()  
+    #Collapse Roles Array hash keys
+    var_roles = roles.dup
+    if var_roles['roles']['role'].kind_of?(Array)
+      var_roles['roles'] = var_roles['roles']['role']
+    else
+      var_roles['roles'] = [].push(var_roles['roles']['role'])
+    end
+   
+    var_roles["roles"].each do |role|    
+      #Find Behaviour attribute containing mysql2
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
+        #Collapse Host Array hash keys
+        if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
+          #Assume I am a uninitialized master!
+          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1"}
+        elsif role['hosts']['host'].kind_of?(Array)
+          hosts = role['hosts']['host']
+        else
+          hosts = [].push(role['hosts']['host'])
+        end
+        #Search each host for master.
+        hosts.delete_if do |host|  
+          if host['@replication_master'] == "1"
+            true
+          else
+            false
+          end
+        end
+        return hosts
+      end
+    end
+  end
 
   def get_www_loadbalancer()
     #Collapse Roles Array hash keys
