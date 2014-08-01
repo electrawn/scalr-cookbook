@@ -125,6 +125,31 @@ class Scalr
     return farm_role_params["mysql2"]["root_password"]
   end
   
+  def get_hosts_by_role_name(role_name, name='')
+    #Collapse Roles Array hash keys
+    var_roles = roles.dup
+    if var_roles['roles']['role'].kind_of?(Array)
+      var_roles['roles'] = var_roles['roles']['role']
+    else
+      var_roles['roles'] = [].push(var_roles['roles']['role'])
+    end
+   
+    var_roles["roles"].each do |role|    
+      #Find Behaviour attribute containing mysql2
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?  
+        if role['@name'].include? name
+          if role['hosts'].nil?           
+            return []
+          elsif role['hosts']['host'].kind_of?(Array)
+            return role['hosts']['host']
+          else
+            return [].push(role['hosts']['host'])
+          end
+        end
+      end
+    end
+  end  
+  
   def get_mysql_master()  
     #Collapse Roles Array hash keys
     var_roles = roles.dup
@@ -140,7 +165,7 @@ class Scalr
         #Collapse Host Array hash keys
         if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
-          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1"}
+          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1", "@status"=> "Running"}
         elsif role['hosts']['host'].kind_of?(Array)
           hosts = role['hosts']['host']
         else
@@ -171,7 +196,7 @@ class Scalr
         #Collapse Host Array hash keys
         if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
-          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1"}
+          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1", "@status"=> "Running"}
         elsif role['hosts']['host'].kind_of?(Array)
           hosts = role['hosts']['host']
         else
@@ -181,6 +206,8 @@ class Scalr
         hosts.delete_if do |host|  
           if host['@replication_master'] == "1"
             true
+          elsif host['@status'] == "Running"
+            false
           else
             false
           end
