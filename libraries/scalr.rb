@@ -123,8 +123,11 @@ class Scalr
     farm_role_params = list_farm_role_params(farm_role_id)
     Chef::Log.warn("Farm Role Params 2: #{farm_role_params}")
     retvar = ''
-    retvar << farm_role_params["mysql2"]["root_password"]
-    retvar << farm_role_params["base"]["mysql2"]["root_password"]
+    if !farm_role_params["mysql2"]["root_password"].nil?
+    retvar = farm_role_params["mysql2"]["root_password"]
+    else
+    retvar = farm_role_params["base"]["mysql2"]["root_password"]
+    end
     return retvar
   end
   
