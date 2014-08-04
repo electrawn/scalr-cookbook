@@ -1,6 +1,7 @@
 require "rexml/document"
 require 'chef/mixin/shell_out'
 include Chef::Mixin::ShellOut
+include Chef::Log
 
 
 class Scalr
@@ -96,7 +97,7 @@ class Scalr
     
     # Parse and return Roles		
     list_farm_role_params = Nori.new(:parser => :rexml).parse(gv_response)
-    
+    Chef::Log.warn("Farm Role Params: #{list_farm_role_params}")
     list_farm_role_params
 	end
   
@@ -111,7 +112,8 @@ class Scalr
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing role_name
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?             
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty? 
+        Chef::Log.warn("ROLE ID: #{role['@id']}")        
         return role['@id']          
       end
     end
