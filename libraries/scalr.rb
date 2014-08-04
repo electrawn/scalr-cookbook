@@ -96,7 +96,6 @@ class Scalr
     
     # Parse and return Roles		
     list_farm_role_params = Nori.new(:parser => :rexml).parse(gv_response)
-    Chef::Log.warn("Farm Role Params: #{list_farm_role_params}")
     list_farm_role_params
 	end
   
@@ -111,8 +110,7 @@ class Scalr
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing role_name
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty? 
-        Chef::Log.warn("ROLE ID: #{role['@id']}")        
+      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?           
         return role['@id']          
       end
     end
@@ -124,7 +122,10 @@ class Scalr
     farm_role_id = get_farm_role_id("mysql2")
     farm_role_params = list_farm_role_params(farm_role_id)
     Chef::Log.warn("Farm Role Params 2: #{farm_role_params}")
-    return farm_role_params["mysql2"]["root_password"]
+    retvar = ''
+    retvar << farm_role_params["mysql2"]["root_password"]
+    retvar << farm_role_params["base"]["mysql2"]["root_password"]
+    return retvar
   end
   
   def get_hosts_by_role_name(role_name, name='')
