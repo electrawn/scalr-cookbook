@@ -172,6 +172,8 @@ class Scalr
         if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
           return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1", "@status"=> "Running"}
+        elsif role['hosts'].nil?
+          return [];
         elsif role['hosts']['host'].kind_of?(Array)
           hosts = role['hosts']['host']
         else
@@ -200,9 +202,12 @@ class Scalr
       #Find Behaviour attribute containing mysql2
       if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
         #Collapse Host Array hash keys
+        Chef::Log.warn("Slave Role Behaviour: #{role['@behaviour]']}")
         if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
           return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1", "@status"=> "Running"}
+        elsif role['hosts'].nil?
+          return [];
         elsif role['hosts']['host'].kind_of?(Array)
           hosts = role['hosts']['host']
         else
