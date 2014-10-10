@@ -131,26 +131,26 @@ class Scalr
   def get_hosts_by_role_name(role_name, name='')
     #Collapse Roles Array hash keys
     var_roles = roles.dup
-    if var_roles['roles']['role'].kind_of?(Array)
-      var_roles['roles'] = var_roles['roles']['role']
-    else
-      var_roles['roles'] = [].push(var_roles['roles']['role'])
-    end
+    #if var_roles['roles']['role'].kind_of?(Array)
+    #  var_roles['roles'] = var_roles['roles']['role']
+    #else
+    #  var_roles['roles'] = [].push(var_roles['roles']['role'])role
+    #end
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing mysql2
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?  
-        if role['@name'].include? name
+      if !role['behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?  
+        if role['name'].include? name
           if role['hosts'].nil?           
             return []
-          elsif role['hosts']['host'].kind_of?(Array)
-            return role['hosts']['host']
           else
-            return [].push(role['hosts']['host'])
+            return role['hosts']
           end
         end
       end
     end
+    #Catch All
+    return []
   end  
   
   def get_mysql_master()  
