@@ -99,16 +99,11 @@ class Scalr
   def get_farm_role_id(role_name)
     #Collapse Roles Array hash keys
     var_roles = roles.dup
-    if var_roles['roles']['role'].kind_of?(Array)
-      var_roles['roles'] = var_roles['roles']['role']
-    else
-      var_roles['roles'] = [].push(var_roles['roles']['role'])
-    end
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing role_name
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?           
-        return role['@id']          
+      if !role['behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?           
+        return role['id']          
       end
     end
     #default return
@@ -156,29 +151,23 @@ class Scalr
   def get_mysql_master()  
     #Collapse Roles Array hash keys
     var_roles = roles.dup
-    if var_roles['roles']['role'].kind_of?(Array)
-      var_roles['roles'] = var_roles['roles']['role']
-    else
-      var_roles['roles'] = [].push(var_roles['roles']['role'])
-    end
+
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing mysql2
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
+      if !role['behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
         #Collapse Host Array hash keys
         if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
-          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1", "@status"=> "Running"}
+          return { "external-ip" => "127.0.0.1", "internal-ip" => "127.0.0.1", "replication-master" => "1", "status"=> "Running"}
         elsif role['hosts'].nil?
-          return [];
-        elsif role['hosts']['host'].kind_of?(Array)
-          hosts = role['hosts']['host']
+          return [];       
         else
-          hosts = [].push(role['hosts']['host'])
+          hosts = role['hosts']
         end
         #Search each host for master.
         hosts.each do |host|  
-          if host['@replication_master'] == "1"
+          if host['replication-master'] == "1"
             return host
           end
         end
@@ -189,32 +178,25 @@ class Scalr
   def get_mysql_slave()  
     #Collapse Roles Array hash keys
     var_roles = roles.dup
-    if var_roles['roles']['role'].kind_of?(Array)
-      var_roles['roles'] = var_roles['roles']['role']
-    else
-      var_roles['roles'] = [].push(var_roles['roles']['role'])
-    end
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing mysql2
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
+      if !role['behaviour'].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?      
         #Collapse Host Array hash keys
         Chef::Log.warn("Slave Role Behaviour: #{role['@behaviour]']}")
         if role['hosts'].nil? && !identity["general"]["behaviour"].split(',').find_all{|behaviour| behaviour == "mysql2"}.empty?
           #Assume I am a uninitialized master!
-          return { "@external_ip" => "127.0.0.1", "@internal_ip" => "127.0.0.1", "@replication_master" => "1", "@status"=> "Running"}
+          return { "external-ip" => "127.0.0.1", "internal-ip" => "127.0.0.1", "replication-master" => "1", "status"=> "Running"}
         elsif role['hosts'].nil?
-          return [];
-        elsif role['hosts']['host'].kind_of?(Array)
-          hosts = role['hosts']['host']
+          return [];       
         else
-          hosts = [].push(role['hosts']['host'])
+          hosts = role['hosts']
         end
         #Search each host for master.
         hosts.delete_if do |host|  
-          if host['@replication_master'] == "1"
+          if host['replication-master'] == "1"
             true
-          elsif host['@status'] == "Running"
+          elsif host['status'] == "Running"
             false
           else
             false
@@ -227,22 +209,13 @@ class Scalr
 
   def get_www_loadbalancer()
     #Collapse Roles Array hash keys
-    var_roles = roles.dup
-    if var_roles['roles']['role'].kind_of?(Array)
-      var_roles['roles'] = var_roles['roles']['role']
-    else
-      var_roles['roles'] = [].push(var_roles['roles']['role'])
-    end
+    var_roles = roles.dup 
    
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing www
-      if !role['@behaviour'].split(',').find_all{|behaviour| behaviour == "www"}.empty?      
-        #Collapse Host Array hash keys
-        if role['hosts']['host'].kind_of?(Array)
-          hosts = role['hosts']['host']
-        else
-          hosts = [].push(role['hosts']['host'])
-        end
+      if !role['behaviour'].split(',').find_all{|behaviour| behaviour == "www"}.empty?      
+        #Collapse Host Array hash keys      
+          hosts = role['hosts']      
         hosts.each do |host|  
           #Return first host
           return host       
