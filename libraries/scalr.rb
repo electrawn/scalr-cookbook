@@ -123,6 +123,19 @@ class Scalr
     return retvar
   end
   
+    def get_mysql_repl_password()    
+    farm_role_id = get_farm_role_id("mysql2")
+    farm_role_params = list_farm_role_params(farm_role_id)
+    Chef::Log.warn("Farm Role Params 2: #{farm_role_params}")
+    retvar = ''
+    if !farm_role_params["mysql2"].nil?
+    retvar = farm_role_params["mysql2"]["repl_password"]
+    else
+    retvar = farm_role_params["base"]["mysql2"]["repl_password"]
+    end
+    return retvar
+  end
+  
   def get_hosts_by_role_name(role_name, name='')
     #Collapse Roles Array hash keys
     var_roles = roles.dup
