@@ -144,21 +144,19 @@ class Scalr
     #else
     #  var_roles['roles'] = [].push(var_roles['roles']['role'])role
     #end
-   
+    retvar = []
     var_roles["roles"].each do |role|    
       #Find Behaviour attribute containing mysql2
       if !role['behaviour'].split(',').find_all{|behaviour| behaviour == "#{role_name}"}.empty?  
-        if role['name'].include? name
-          if role['hosts'].nil?           
-            return []
-          else
-            return role['hosts']
+        if role['name'].include? name or role['alias'].include? name 
+          if !role['hosts'].nil?                    
+            retvar += role['hosts']
           end
         end
       end
     end
     #Catch All
-    return []
+    return retvar
   end  
   
   def get_mysql_master()  
